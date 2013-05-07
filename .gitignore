@@ -1,5 +1,6 @@
 *.pyc
 *.inc
+*.swp
 content
 
 # C extensions
