@@ -56,6 +56,12 @@ def get_post_path(post_name = "post.inc"):
     os.makedirs(full_path)
   return(post_path)
 
+def set_default(server, remote_file):
+	command = "ssh " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
+	debug("COMMAND: " + command)
+	os.system(command)
+
+
 def debug(msg):
   if DEBUG:
     print "DEBUG::" + msg
