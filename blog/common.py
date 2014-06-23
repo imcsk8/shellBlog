@@ -59,14 +59,15 @@ def get_post_path(post_name = "post.inc"):
     os.makedirs(full_path)
   return(post_path)
 
-def set_default(server, remote_file):
-	command = "ssh " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
-	debug("COMMAND: " + command)
-	os.system(command)
+def set_main_story(server, remote_path, remote_file):
+    #command = "ssh " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
+    command = "ssh %s 'cd %s; ln -sfn %s default.inc' " % (server, remote_path, remote_file)
+    debug("COMMAND: " + command)
+    os.system(command)
 
 #def get_remote_post(server, remote_post_name = "post.inc"):
-	#command = "scp %s:%s %s/." % (server, 
-	#command = "scp " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
+    #command = "scp %s:%s %s/." % (server, 
+    #command = "scp " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
 
 def get_options():
     usage = "usage: %prog [options] [--help]"
@@ -75,7 +76,8 @@ def get_options():
     parser.add_option("-k", "--keep-local", default=True, help="Keep local files")
     parser.add_option("-d", "--debug", default=True, help="Keep local files")
     parser.add_option("-l", "--local-path", help="Set the local document path")
-    parser.add_option("-r", "--remote-path", help="Set the local document path")
+    parser.add_option("-r", "--remote-path", help="Set the remote document path")
+    parser.add_option("-e", "--editor", default="vim", help="Set the editor")
     (options, args) = parser.parse_args()
     if not options.server:
         #printOptions()
@@ -87,6 +89,12 @@ def get_options():
         print "missing publishing server\n"
         raise SystemExit
     return options
+
+def publish(local_path, server, remote_path):
+    command = "%s %s/* %s:%s/." % (SCP, local_path, server, remote_path)
+    debug("COMMAND: " + command)
+    os.system(command)
+
 
 def debug(msg):
   if DEBUG:

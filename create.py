@@ -24,26 +24,29 @@
 
 import os
 import sys
-from blog import common
-from blog import version
+from blog.common import *
+from blog.version import *
 from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
 
-#Directory in which the local posts are stored
-LOCAL_PATH = "content"
-#Drectory in which de remote posts are published
-REMOTE_PATH = "web/content"
-DEBUG = True
-LOCAL = True
-
-options = common.get_options()
+options = get_options()
    
 # Sets command line options
 DEBUG = options.debug
 SERVER = options.server
 LOCAL = options.keep_local
 
-#get your default editor
-editor = os.environ.get('EDITOR')
+if options.local_path:
+    LOCAL_PATH = options.local_path
+
+if options.remote_path:
+    REMOTE_PATH = options.remote_path
+
+#environment variable takes precedence
+if os.environ.get('EDITOR'):
+    editor = os.environ.get('EDITOR')
+else:
+    editor = options.editor
+
 post_path = get_post_path()
 #need to change this for a name, but it's late at night and i want to try this baby
 file_path = LOCAL_PATH + "/" + post_path + "/post.inc"
@@ -54,12 +57,11 @@ os.system(command)
 remote_file = post_path + "/post.inc"
 
 #in the mean time we use the ssh commands
-command = SCP + " " + LOCAL_PATH + "/* " + SERVER + ":" + REMOTE_PATH + "/."
-debug("COMMAND: " + command)
-os.system(command)
+#command = SCP + " " + LOCAL_PATH + "/* " + SERVER + ":" + REMOTE_PATH + "/."
+publish(LOCAL_PATH, SERVER, REMOTE_PATH)
 
 #create the default entry
-set_default(SERVER, remote_file)
+set_main_story(SERVER, REMOTE_PATH, remote_file)
 
 #in case you don't want to keep local copies of your posts
 if not LOCAL:
