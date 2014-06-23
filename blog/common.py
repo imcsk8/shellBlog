@@ -17,6 +17,9 @@ import os
 import sys
 import getopt
 import datetime
+from blog import version
+from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
+
 
 """
 
@@ -61,6 +64,29 @@ def set_default(server, remote_file):
 	debug("COMMAND: " + command)
 	os.system(command)
 
+#def get_remote_post(server, remote_post_name = "post.inc"):
+	#command = "scp %s:%s %s/." % (server, 
+	#command = "scp " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
+
+def get_options():
+    usage = "usage: %prog [options] [--help]"
+    parser = OptionParser(usage=usage,version="%prog {0} {1}".format(version.release_string(), version.version_string()))
+    parser.add_option("-s", "--server", help="The server in which to publish the posts")
+    parser.add_option("-k", "--keep-local", default=True, help="Keep local files")
+    parser.add_option("-d", "--debug", default=True, help="Keep local files")
+    parser.add_option("-l", "--local-path", help="Set the local document path")
+    parser.add_option("-r", "--remote-path", help="Set the local document path")
+    (options, args) = parser.parse_args()
+    if not options.server:
+        #printOptions()
+        #opt_help = IndentedHelpFormatter()
+        #opt_help.set_parser(parser)
+        #opt_help.store_option_strings(parser)
+        #    opt_help.option_strings = options
+        #print opt_help.format_option(options.server)
+        print "missing publishing server\n"
+        raise SystemExit
+    return options
 
 def debug(msg):
   if DEBUG:

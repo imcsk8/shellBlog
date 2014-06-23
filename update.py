@@ -28,7 +28,7 @@ SERVER = ""
 DEFAULT_POST = ""
 
 if len(sys.argv) <= 2:
-  print "Usage: " + sys.argv[0] + " <server filename> <post file>"
+  print "Usage: " + sys.argv[0] + " <server filename> <post path>"
   exit()
 
 SERVER = sys.argv[1]

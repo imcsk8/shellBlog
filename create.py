@@ -24,14 +24,23 @@
 
 import os
 import sys
-from blog import *
+from blog import common
+from blog import version
+from optparse import OptionParser, OptionGroup, IndentedHelpFormatter
 
-if len(sys.argv) <= 1:
-  print "Usage: " + sys.argv[0] + " server filename"
-  exit()
+#Directory in which the local posts are stored
+LOCAL_PATH = "content"
+#Drectory in which de remote posts are published
+REMOTE_PATH = "web/content"
+DEBUG = True
+LOCAL = True
 
-
-SERVER = sys.argv[1]
+options = common.get_options()
+   
+# Sets command line options
+DEBUG = options.debug
+SERVER = options.server
+LOCAL = options.keep_local
 
 #get your default editor
 editor = os.environ.get('EDITOR')
