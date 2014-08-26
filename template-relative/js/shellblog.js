@@ -36,7 +36,7 @@ function getPath() {
  */
 
 $(document).ready(function() {
-	defaultContent = "content/default";
+	defaultContent = "/content/default";
 	urlContent = getPath();
 	if(!urlContent)
 		urlContent = defaultContent;

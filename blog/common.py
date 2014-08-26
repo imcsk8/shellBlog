@@ -40,6 +40,11 @@ LOCAL = True
 DEFAULT_POST = REMOTE_PATH + "/default.inc"
 SCP = "scp -rp"
 
+def execute(command):
+    """executes a command
+    """
+    debug("COMMAND: " + command)
+    os.system(command)
 
 def check_dir(dir_name = LOCAL_PATH):
   """Checks if a directory exists, if it does not, it creates it
@@ -62,8 +67,7 @@ def get_post_path(post_name = "post.inc"):
 def set_main_story(server, remote_path, remote_file):
     #command = "ssh " + server + " 'cd " + REMOTE_PATH  + "; ln -sfn " + remote_file  + " default.inc' "
     command = "ssh %s 'cd %s; ln -sfn %s default.inc' " % (server, remote_path, remote_file)
-    debug("COMMAND: " + command)
-    os.system(command)
+    execute(command)
 
 #def get_remote_post(server, remote_post_name = "post.inc"):
     #command = "scp %s:%s %s/." % (server, 
@@ -77,6 +81,7 @@ def get_options():
     parser.add_option("-d", "--debug", default=True, help="Keep local files")
     parser.add_option("-l", "--local-path", help="Set the local document path")
     parser.add_option("-r", "--remote-path", help="Set the remote document path")
+    parser.add_option("-t", "--template", help="Set the template to use")
     parser.add_option("-e", "--editor", default="vim", help="Set the editor")
     (options, args) = parser.parse_args()
     if not options.server:
@@ -91,10 +96,15 @@ def get_options():
     return options
 
 def publish(local_path, server, remote_path):
+    """ Publishes a story in the remote server
+    """
     command = "%s %s/* %s:%s/." % (SCP, local_path, server, remote_path)
-    debug("COMMAND: " + command)
-    os.system(command)
+    execute(command)
 
+def init_remote_site(server, remote_path):
+    command = "%s template/* %s:%s/." % (SCP, server, remote_path)
+    command += ";%s content/* %s:%s/." % (SCP, server, remote_path)
+    execute(command)
 
 def debug(msg):
   if DEBUG:
